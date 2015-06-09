@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>Innovation Diffuition Modeling </title>
+		<script type="text/javascript" src="js/jquery-1.11.3.min.js"></script>
+		<script type="text/javascript" src="js/d3.min.js"></script>
+		
+		
+		<script type="text/javascript" src="js/base.js"></script>
+		<script type="text/javascript" src="js/diffusion.js"></script>
+		<script type="text/javascript" src="bootstrap/js/bootstrap.js"></script>
+		<link rel="stylesheet" href="css/diffusion.css">
+		<link rel="stylesheet" href="bootstrap/css/bootstrap.css">	
+	</head>
+	
+	<body>
+		<div class='container'>
+			<div class='row'>
+			<div class='col-lg-3'>
+				<!--lay the control panel -->
+				<div>
+					<h2><p class="bg-success">json file</p></h2>
+					<input type="file" id="exampleInputFile" />
+					<button type="button" id='startSimulation' class="btn btn-primary btn-lg btn-block">START</button>
+				</div>
+				<!--lay the dynamic simulation panel -->
+				<div id='simulationPanel'>
+
+				</div>
+			</div>
+
+			<div class='col-lg-9' id='main'>
+
+			</div>
+			</div>
+		</div>
+	</body>
+</html>
