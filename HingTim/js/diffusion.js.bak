@@ -2,25 +2,22 @@
 interpret the global data:
 	nodeMap:{{id:pro,status},...,...} store the node status,init in the node2Map function 
 										when the page load
-	
-	
-
  */
 /*
 		status: 
-				0 awareness  警惕                     黑色
-				1 interest   产生兴趣                 灰色
+				0 awareness  警惕                     green
+				1 interest   产生兴趣                 blue
 				2 evaluation 评估，to or not to 
 				3 trial     尝试                      黄色
-				4 adaption  采纳                      红色
+				4 adaption  采纳                      red
 */
 
 var nodeMap = {}
-var activity
-var cur_activity = 0
+var activity                //活动
+var cur_activity = 0        //当前活动
 
 var width = 900,height = 700;
-var edges
+var edges   
 var nodes
 var dataset
 var nodes_data
@@ -39,7 +36,7 @@ var colors = d3.scale.category20();
 
 		$(document).ready(function(){
 			bindEvent()
-			readActivity()
+			//readActivity()
 			var force = d3.layout.force()
 				.size([width, height])
 				.linkDistance([50])
@@ -63,7 +60,6 @@ var colors = d3.scale.category20();
 				    	.on("dblclick.zoom", null)
 			d3.json('wu.json',function(error,data){
 				if (error){
-
 					console.log(error)
 				}
 				dataset = data
@@ -83,14 +79,22 @@ var colors = d3.scale.category20();
 								.append("line")
 								.attr('id',function(d){return 'e'+d.source.id+'-'+d.target.id})
 								.style("stroke", "#A4D3EE")
-								.style("stroke-width", 3);
+								.style("stroke-width", 1);
+								
 				//Create nodes as circles
 				nodes = svg.append("svg:g").selectAll("circle")
 								.data(nodes_data,function(d){ return d.id; })
 								.enter()
 								.append("circle")
-								.attr('class','node')
-								.attr("r", function(d){return Math.sqrt(d.pro+1)*5})
+								//.attr('class', 'node')
+								.attr('class',function(d){ 
+									if( d.id >0&& d.id<22) 
+										return  'node leader'
+									else( d.id >21)
+										return 'node point'
+									})
+               // .text(function (d) { return d.id})
+								//.attr("r", function(d){return Math.sqrt(d.pro+1)*5})
 								.attr('id',function(d){return 'n'+d.id})
 								.style("fill", function(d, i) {
 									if(d.status == 4)
@@ -104,16 +108,19 @@ var colors = d3.scale.category20();
 										if(d.id==0)
 											return 10
 										else
-											return 5
-										
-									})
+											return 5									
+								})
 								//.on('click',function(d){
 								//	deleteNode(d.id)
 								//})
 								.call(force.drag);
 				nodes
+					//.enter()
 					.append("title")
-					.text(function(d) { return d.id; });
+					.text(function(d) { return d.id; })
+					//.selection.text;
+					
+					
 				force.on("tick", function() {
 
 				edges
@@ -257,11 +264,11 @@ function updatePanel(){
 			.duration(1000)
 			.call(yAxis);
 }					
-function readActivity(){
-	d3.json('activity.json',function(error,data){
-		activity = data
-	})
-}
+//function readActivity(){
+//	d3.json('activity.json',function(error,data){
+//		activity = data
+//	})
+//}
 function simulationSI()
 {
 	d3.selectAll('.new').style('fill','#F00')
@@ -270,8 +277,8 @@ function simulationSI()
 	edges_data.forEach(function(e){
 		target = e.target.id
 		source = e.source.id
-		//console.log('target'+target)
-		//console.log('source'+source)
+		console.log('target'+target)
+		console.log('source'+source)
 		node_t = d3.select("#n"+target)
 		node_s = d3.select("#n"+source)
 		node_t_data = nodeMap[target]
@@ -310,9 +317,76 @@ function simulationSI()
 	if(!canSend && handle!='undefined'){
 		clearInterval(handle)
 	}
-
-
 }
+
+function simulationSI_1()
+{
+	  leader.forEach(function(e)){
+	  	target = e.target.id
+			source = e.source.id
+			console.log('target'+target)
+			console.log('source'+source)
+			e.style('fill','#F00')
+			
+	}
+	
+	
+//		d3.selectAll('.new').style('fill','#F00')
+//	d3.selectAll('.new').classed('new',false)
+//	canSend = false
+//	edges_data.forEach(function(e){
+//		target = e.target.id
+//		source = e.source.id
+//		console.log('target'+target)
+//		console.log('source'+source)
+//		node_t = d3.select("#n"+target)
+//		node_s = d3.select("#n"+source)
+//		node_t_data = nodeMap[target]
+//		node_s_data = nodeMap[source]
+//		if(node_s_data.status == 4 && !node_s.classed('new'))
+//		{
+//			if(node_t_data.status != 4){
+//				canSend = true
+//				pro = Math.round(Math.random()*10)/10
+//				if(node_t.id >0)
+//				{
+//						node_t_data.status = 4
+//						node_t.style('fill','#00E5EE')
+//					  node_t.classed('new',true)
+//					  total_infected_people += 1
+//				}
+////				if(pro >= node_t_data.pro){
+////					node_t.style('fill','#00E5EE')
+////					node_t_data.status = 4
+////					node_t.classed('new',true)
+////					total_infected_people += 1
+////				}
+//			}
+//		}
+//		if(node_t_data.status == 4 && !node_t.classed('new')){
+//			if(node_s_data.status != 4){
+//				canSend = true
+//				pro = Math.round(Math.random()*10)/10
+//				if(pro > node_s_data.pro){
+//					node_s.style('fill','#00E5EE')
+//					node_s.classed('new',true)
+//					node_s_data.status = 4
+//					total_infected_people += 1
+//				}
+//			
+//			}
+//		}
+//
+//	})
+//	console.log('cur_people'+total_infected_people)
+//	i = simulateData[simulateData.length-1][0]
+//	simulateData.push([i+1,total_infected_people])
+//	updatePanel()
+//	if(!canSend && handle!='undefined'){
+//		clearInterval(handle)
+//	}
+}
+
 function runActivity(){
 	cur = activity[cur_activity]
 	var color_mt = '#7FFF00'
